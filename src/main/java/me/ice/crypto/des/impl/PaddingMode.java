@@ -22,7 +22,7 @@ public enum PaddingMode {
     /**
      * 无填充
      */
-    NoPadding,
+    None,
     PKCS5,
     PKCS7
 }

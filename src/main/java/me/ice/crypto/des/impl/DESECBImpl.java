@@ -38,7 +38,7 @@ public class DESECBImpl {
         if (key.length() > Constants.DES_BLOCK_SIZE) {
             key = key.substring(0, Constants.DES_BLOCK_SIZE);
         }
-        byte[] textResult = NumberUtils.encodeToBinary(plaintext, PaddingMode.NoPadding);
+        byte[] textResult = NumberUtils.encodeToBinary(plaintext, PaddingMode.ZeroPadding);
         // 每一个块的大小
         int blockCount = (textResult.length + 1) / Constants.DES_BLOCK_SIZE;
         if (textResult.length < Constants.DES_BLOCK_SIZE) {
@@ -50,7 +50,7 @@ public class DESECBImpl {
             for (int i = 0; i < blockCount; i++) {
                 byte[] block = new byte[Constants.DES_BLOCK_SIZE];
                 System.arraycopy(textResult, i * Constants.DES_BLOCK_SIZE, block, 0, Constants.DES_BLOCK_SIZE);
-                byte[] keyResult = NumberUtils.encodeToBinary(key, PaddingMode.NoPadding);
+                byte[] keyResult = NumberUtils.encodeToBinary(key, PaddingMode.ZeroPadding);
                 byte[] cipherText = DESImpl.des(block, keyResult);
                 System.arraycopy(cipherText, 0, ret, Constants.DES_BLOCK_SIZE * i, Constants.DES_BLOCK_SIZE);
             }

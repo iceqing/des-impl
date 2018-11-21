@@ -44,36 +44,58 @@ public class NumberUtils {
      * 输入一个字符串
      * 输出： 一个二进制（0,1）的数组
      *
-     * @param superman
+     * @param plainText
      */
-    public static byte[] encodeToBinary(String superman, PaddingMode paddingMode) {
-        if (paddingMode == null) {
-            throw new IllegalArgumentException("paddingMode is valid!");
+    public static byte[] encodeToBinary(String plainText, PaddingMode paddingMode) {
+        if (plainText == null || paddingMode == null) {
+            throw new IllegalArgumentException("params is valid!");
         }
 
-        byte[] bytes = superman.getBytes();
+        StringBuilder plainTextBuilder = new StringBuilder(plainText);
+
+        // 不足零末尾补零到64的倍数
+        switch (paddingMode) {
+            case ZeroPadding: {
+                while (plainTextBuilder.length() == 0 || plainTextBuilder.length() % 8 != 0) {
+                    plainTextBuilder.append("0");
+                }
+                plainText = plainTextBuilder.toString();
+                break;
+            }
+            case None: {
+                if (plainText.length() % 8 != 0) {
+                    throw new IllegalArgumentException("plain text must be n*8 bytes (n=1,2,3...), plain text wrong size : " + plainText.length());
+                }
+                break;
+            }
+            case PKCS5: {
+                int r = 8;
+                while (plainTextBuilder.length() == 0 || plainTextBuilder.length() % r != 0) {
+                    plainTextBuilder.append(String.valueOf(r));
+                }
+                plainText = plainTextBuilder.toString();
+                break;
+            }
+            case PKCS7: {
+                int r = 8;
+                while (plainTextBuilder.length() == 0 || plainTextBuilder.length() % r != 0) {
+                    plainTextBuilder.append(String.valueOf(r));
+                }
+                plainText = plainTextBuilder.toString();
+                break;
+            }
+            default:
+                ;
+        }
+
+
+        System.out.println("plainText = " + plainText);
+
+        byte[] bytes = plainText.getBytes();
         StringBuilder binary = new StringBuilder();
         for (byte b : bytes) {
             String str = String.format("%8s", Integer.toBinaryString((int) b)).replace(" ", "0");
             binary.append(str);
-        }
-        // 不足零末尾补零到64的倍数
-        switch (paddingMode) {
-            case ZeroPadding: {
-                while (binary.length() == 0 || binary.length() % 64 != 0) {
-                    binary.append("0");
-                }
-                break;
-            }
-            case NoPadding:
-                break;
-            case PKCS5:
-                break;
-
-            case PKCS7:
-                break;
-            default:
-                ;
         }
 
         byte[] ret = new byte[binary.length()];

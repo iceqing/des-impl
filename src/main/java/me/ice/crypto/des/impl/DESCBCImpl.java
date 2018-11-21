@@ -26,11 +26,11 @@ import me.ice.crypto.des.utils.NumberUtils;
 public class DESCBCImpl {
 
     public static byte[] cbc(String plaintext, String key, String iv) {
-        byte[] textResult = NumberUtils.encodeToBinary(plaintext, PaddingMode.NoPadding);
+        byte[] textResult = NumberUtils.encodeToBinary(plaintext, PaddingMode.ZeroPadding);
         int blockCount = (textResult.length + Constants.DES_BLOCK_SIZE - 1) / Constants.DES_BLOCK_SIZE;
         byte[] ret = new byte[blockCount * Constants.DES_BLOCK_SIZE];
-        byte[] keyResult = NumberUtils.encodeToBinary(key, PaddingMode.NoPadding);
-        byte[] ivResult = NumberUtils.encodeToBinary(iv, PaddingMode.NoPadding);
+        byte[] keyResult = NumberUtils.encodeToBinary(key, PaddingMode.ZeroPadding);
+        byte[] ivResult = NumberUtils.encodeToBinary(iv, PaddingMode.ZeroPadding);
         if (textResult.length < Constants.DES_BLOCK_SIZE) {
             throw new ArrayIndexOutOfBoundsException("Array size wrong");
         } else {
